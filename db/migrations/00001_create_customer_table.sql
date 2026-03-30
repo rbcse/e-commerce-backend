@@ -6,3 +6,6 @@ CREATE TABLE customers (
     password_hash VARCHAR(255) NOT NULL,
     phone_number VARCHAR(14) NOT NULL UNIQUE
 );
+
+-- +goose Down
+DROP TABLE IF EXISTS customers;
