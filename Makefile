@@ -36,11 +36,5 @@ restart: stop run-backend
 logs:
 	docker logs -f e-commerce-db
 
-pgadmin:
-	docker run -d \
-		--name pgadmin \
-		-e PGADMIN_DEFAULT_EMAIL=admin@admin.com \
-		-e PGADMIN_DEFAULT_PASSWORD=admin \
-		-p 5050:80 \
-		dpage/pgadmin4
-	@echo "pgAdmin running at http://localhost:5050"
+open-db:
+	docker exec -it e-commerce-db psql -U snapy -d ecommerce
