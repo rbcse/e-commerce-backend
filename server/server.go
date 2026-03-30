@@ -1,10 +1,11 @@
 package server
 
 import (
-    "e-commerce/config"
-    "e-commerce/db"
-    "e-commerce/routes"
-    "github.com/gin-gonic/gin"
+	"e-commerce/config"
+	"e-commerce/db"
+	"e-commerce/routes"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Start() {
