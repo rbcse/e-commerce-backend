@@ -4,6 +4,6 @@ import (
 	"e-commerce/server"
 )
 
-func main(){
+func main() {
 	server.Start()
 }

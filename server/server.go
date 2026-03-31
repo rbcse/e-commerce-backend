@@ -9,10 +9,10 @@ import (
 )
 
 func Start() {
-    cfg := config.Load()
-    database := db.Connect(cfg.DatabaseURL)
+	cfg := config.Load()
+	database := db.Connect(cfg.DatabaseURL)
 
-    r := gin.Default()
-    routes.Register(r, database)
-    r.Run(":" + cfg.Port)
+	r := gin.Default()
+	routes.Register(r, database)
+	r.Run(":" + cfg.Port)
 }
