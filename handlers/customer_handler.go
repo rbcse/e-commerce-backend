@@ -1,23 +1,58 @@
 package handlers
 
 import (
+	"e-commerce/app"
+	customerrequest "e-commerce/dto/request/customer_request"
+	customerresponse "e-commerce/dto/response/customer_response"
+	customerservice "e-commerce/service/customer_service"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type CustomerHandler struct {
-	db *gorm.DB
+	service customerservice.CustomerSignupService
 }
 
-func RegisterCustomerRoutes(rg *gin.RouterGroup , db *gorm.DB){
-	h := &CustomerHandler{
-		db : db,
+func NewCustomerHandler(svc customerservice.CustomerSignupService)*CustomerHandler{
+	return  &CustomerHandler{
+		service: svc,
 	}
+}
 
+func RegisterCustomerRoutes(rg *gin.RouterGroup , svc customerservice.CustomerSignupService) {
+	h := NewCustomerHandler(svc)
 	customers := rg.Group("/customer")
 	{
-		customers.POST("/signup",h.CustomerSignup)
+		customers.POST(app.CustomerSignupEndPoint, h.CustomerSignup)
 	}
 }
 
-func (h *CustomerHandler) CustomerSignup(c *gin.Context){}
+func (ch *CustomerHandler) CustomerSignup(c *gin.Context) {
+
+	var req customerrequest.CustomerSignupRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest,customerresponse.CustomerSignupResponse{
+			IsSignUpSuccessful: false,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	err := ch.service.CustomerSignup(req,c.Request.Context())
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError , customerresponse.CustomerSignupResponse{
+			IsSignUpSuccessful: false,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK , customerresponse.CustomerSignupResponse{
+		IsSignUpSuccessful: true,
+		Message: "Customer Account created successfully",
+	}) 
+
+}

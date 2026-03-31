@@ -30,6 +30,7 @@ migrate-status:
 stop:
 	docker stop e-commerce-db
 	docker rm e-commerce-db
+	docker volume rm e-commerce_pgdata
 
 restart: stop run-backend
 
@@ -38,3 +39,7 @@ logs:
 
 open-db:
 	docker exec -it e-commerce-db psql -U snapy -d ecommerce
+
+fmt:
+	gofmt -w .
+	goimports -w .
