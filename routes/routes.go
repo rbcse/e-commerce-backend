@@ -12,6 +12,7 @@ import (
 func Register(r *gin.Engine, db *gorm.DB) {
 	api := r.Group("/api/v1")
 	customerRepo := customerrepository.NewCustomerSignupRepository(db)
-	customerService := customerservice.NewCustomerSignupService(customerRepo)
+	hasher := &customerservice.BcryptPasswordHasher{}
+	customerService := customerservice.NewCustomerSignupService(customerRepo,hasher)
 	handlers.RegisterCustomerRoutes(api, customerService)
 }
