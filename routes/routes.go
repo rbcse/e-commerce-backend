@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"e-commerce/handlers"
+	customer_handler "e-commerce/handlers/customer_handler"
 	customerrepository "e-commerce/repository/customer_repository"
 	customerservice "e-commerce/service/customer_service"
 
@@ -14,5 +14,5 @@ func Register(r *gin.Engine, db *gorm.DB) {
 	customerRepo := customerrepository.NewCustomerSignupRepository(db)
 	hasher := &customerservice.BcryptPasswordHasher{}
 	customerService := customerservice.NewCustomerSignupService(customerRepo,hasher)
-	handlers.RegisterCustomerRoutes(api, customerService)
+	customer_handler.RegisterCustomerRoutes(api, customerService)
 }
