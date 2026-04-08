@@ -2,6 +2,7 @@ package otprepository
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -37,6 +38,7 @@ func (or *otpRepository) SaveOTP(identifier, otp string) error {
 
 	pipe.Expire(ctx, key, or.ttl)
 	_, err := pipe.Exec(ctx)
+	fmt.Println("Otp saved to redis");
 	return err
 
 }

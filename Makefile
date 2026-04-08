@@ -33,6 +33,9 @@ stop:
 	docker stop e-commerce-db
 	docker rm e-commerce-db
 	docker volume rm e-commerce_pgdata
+	docker stop redis
+	docker rm redis
+	
 
 restart: stop run-backend
 

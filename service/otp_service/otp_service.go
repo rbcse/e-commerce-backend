@@ -34,6 +34,18 @@ func (os *otpService) GenerateOTP(identifier, otp_type string) (string, error) {
 		return "", err
 	}
 
+	sender , err := GetSender(OTPType(otp_type))
+
+	if err != nil {
+		return "" , err
+	}
+
+	err = sender.Send(identifier,otp);
+
+	if err != nil {
+		return "" , err
+	}
+
 	err = os.repo.SaveOTP(identifier, otp)
 	return otp, err
 
