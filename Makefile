@@ -15,6 +15,8 @@ run-backend:
 	@ping -n 6 127.0.0.1 >nul
 	@echo "Running migrations..."
 	goose -dir db/migrations postgres "$(DB_URL)" up
+	@echo "Redis Setup..."
+	docker run -d --name redis -p 6379:6379 redis:alpine
 	@echo "Starting backend..."
 	go run .
 
@@ -43,3 +45,6 @@ open-db:
 fmt:
 	gofmt -w .
 	goimports -w .
+
+open-redis:
+	docker exec -it redis redis-cli
