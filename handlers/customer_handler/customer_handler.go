@@ -36,6 +36,7 @@ func RegisterCustomerRoutes(
 	{
 		customers.POST(app.CustomerSignupEndPoint, h.CustomerSignup)
 		customers.POST(app.GenerateOTP, h.GenerateOTP)
+		customers.POST(app.VerifyOTP, h.VerifyOTP)
 	}
 }
 
@@ -86,4 +87,31 @@ func (ch *CustomerHandler) GenerateOTP(c *gin.Context) {
 		Otp:     otp,
 		Message: "OTP generated successfully",
 	})
+}
+
+func (ch *CustomerHandler) VerifyOTP(c *gin.Context){
+
+	var req customerrequest.VerifyOTPRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest , customerresponse.VerifyOTPResponse{
+			IsOTPVerified: false,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	err := ch.customerService.VerifyCustomerOTP(c.Request.Context(),req.Identifier,req.OTPType,req.OTP)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError,customerresponse.VerifyOTPResponse{
+			IsOTPVerified: false,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK,customerresponse.VerifyOTPResponse{
+		IsOTPVerified: true,
+		Message: "OTP Verified successfully",
+	})
+
 }

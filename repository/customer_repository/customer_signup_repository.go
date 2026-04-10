@@ -11,6 +11,8 @@ type CustomerSignupRepository interface {
 	CreateCustomerAccount(customer *model.Customer) error
 	FindByEmail(ctx context.Context, email string) (*model.Customer, error)
 	FindByPhoneNumber(ctx context.Context, phone_number string) (*model.Customer, error)
+	MarkEmailVerified(ctx context.Context , email string) error
+	MarkPhoneNumberVerified(ctx context.Context , phoneNumber string) error
 }
 
 type customerSignupRepository struct {
@@ -44,4 +46,14 @@ func (cr *customerSignupRepository) FindByPhoneNumber(ctx context.Context, phone
 		return nil, result.Error
 	}
 	return customer, nil
+}
+
+func (cr *customerSignupRepository) MarkEmailVerified(ctx context.Context , email string) error {
+	result := cr.db.WithContext(ctx).Model(&model.Customer{}).Where("email = ?",email).Update("is_email_verified",true)
+	return result.Error
+}
+
+func (cr *customerSignupRepository) MarkPhoneNumberVerified(ctx context.Context , phoneNumber string) error {
+	result := cr.db.WithContext(ctx).Model(&model.Customer{}).Where("email = ?",phoneNumber).Update("is_phone_number_verified",true)
+	return result.Error
 }

@@ -6,6 +6,7 @@ import (
 	ae "e-commerce/error"
 	"e-commerce/model"
 	customerrepository "e-commerce/repository/customer_repository"
+	otpservice "e-commerce/service/otp_service"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -23,17 +24,20 @@ func (b *BcryptPasswordHasher) Hash(password string) (string, error) {
 
 type CustomerSignupService interface {
 	CustomerSignup(req customerrequest.CustomerSignupRequest, ctx context.Context) error
+	VerifyCustomerOTP(ctx context.Context , identifier , otpType , otp string) error
 }
 
 type customerSignupService struct {
 	repo   customerrepository.CustomerSignupRepository
 	hasher PasswordHasher
+	otpService otpservice.OTPService
 }
 
-func NewCustomerSignupService(repo customerrepository.CustomerSignupRepository, hasher PasswordHasher) CustomerSignupService {
+func NewCustomerSignupService(repo customerrepository.CustomerSignupRepository, hasher PasswordHasher , otpService otpservice.OTPService) CustomerSignupService {
 	return &customerSignupService{
 		repo:   repo,
 		hasher: hasher,
+		otpService: otpService,
 	}
 }
 
@@ -61,4 +65,20 @@ func (cs *customerSignupService) CustomerSignup(req customerrequest.CustomerSign
 
 	return err
 
+}
+
+func (cs *customerSignupService) VerifyCustomerOTP(ctx context.Context , identifier , otp_type , otp string) error {
+
+	err := cs.otpService.VerifyOTP(identifier,otp_type,otp);
+	if err != nil {
+		return err
+	}
+
+	if otp_type == "EMAIL" {
+		err = cs.repo.MarkEmailVerified(ctx,identifier)
+	} else {
+		err = cs.repo.MarkPhoneNumberVerified(ctx,identifier)
+	}
+
+	return err
 }

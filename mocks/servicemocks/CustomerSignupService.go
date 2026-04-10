@@ -32,6 +32,24 @@ func (_m *CustomerSignupService) CustomerSignup(req customerrequest.CustomerSign
 	return r0
 }
 
+// VerifyCustomerOTP provides a mock function with given fields: ctx, identifier, otpType, otp
+func (_m *CustomerSignupService) VerifyCustomerOTP(ctx context.Context, identifier string, otpType string, otp string) error {
+	ret := _m.Called(ctx, identifier, otpType, otp)
+
+	if len(ret) == 0 {
+		panic("no return value specified for VerifyCustomerOTP")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, string) error); ok {
+		r0 = rf(ctx, identifier, otpType, otp)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewCustomerSignupService creates a new instance of CustomerSignupService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewCustomerSignupService(t interface {

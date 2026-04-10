@@ -3,13 +3,21 @@ package otprepository
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
+type OTPData struct {
+	Identifier string
+	OTP string
+	Attempts int
+}
+
 type OTPRepository interface {
 	SaveOTP(identifier, otp string) error
+	GetOTP(identifier string) (*OTPData , error)
 }
 
 type otpRepository struct {
@@ -40,5 +48,28 @@ func (or *otpRepository) SaveOTP(identifier, otp string) error {
 	_, err := pipe.Exec(ctx)
 	fmt.Println("Otp saved to redis");
 	return err
+
+}
+
+func (or *otpRepository) GetOTP(identifier string) (*OTPData , error) {
+
+	ctx := context.Background()
+	key := "otp:" + identifier
+	result , err := or.client.HGetAll(ctx,key).Result()
+
+	if err != nil {
+		return nil , err
+	}
+
+	if len(result) == 0 {
+		return nil , redis.Nil
+	}
+
+	attempts , _ := strconv.Atoi(result["attempts"])
+	return &OTPData{
+		Identifier: result["identifier"],
+		OTP: result["otp"],
+		Attempts: attempts,
+	} , nil
 
 }
