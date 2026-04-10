@@ -93,6 +93,42 @@ func (_m *CustomerSignupRepository) FindByPhoneNumber(ctx context.Context, phone
 	return r0, r1
 }
 
+// MarkEmailVerified provides a mock function with given fields: ctx, email
+func (_m *CustomerSignupRepository) MarkEmailVerified(ctx context.Context, email string) error {
+	ret := _m.Called(ctx, email)
+
+	if len(ret) == 0 {
+		panic("no return value specified for MarkEmailVerified")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, email)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MarkPhoneNumberVerified provides a mock function with given fields: ctx, phoneNumber
+func (_m *CustomerSignupRepository) MarkPhoneNumberVerified(ctx context.Context, phoneNumber string) error {
+	ret := _m.Called(ctx, phoneNumber)
+
+	if len(ret) == 0 {
+		panic("no return value specified for MarkPhoneNumberVerified")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, phoneNumber)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewCustomerSignupRepository creates a new instance of CustomerSignupRepository. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewCustomerSignupRepository(t interface {

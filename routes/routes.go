@@ -20,10 +20,14 @@ func Register(r *gin.Engine, db *gorm.DB, redisClient *redis.Client) {
 	customerRepo := customerrepository.NewCustomerSignupRepository(db)
 	otpRepo := otprepository.NewOTPRepository(redisClient, 5*time.Minute)
 
-	// Services
+	// Services Dependencies
 	hasher := &customerservice.BcryptPasswordHasher{}
-	customerService := customerservice.NewCustomerSignupService(customerRepo, hasher)
-	otpService := otpservice.NewOTPService(otpRepo)
+	otpGenerator := &otpservice.DefaultOTPGenerator{}
+	senderFactory := &otpservice.DefaultSenderFactory{}
+
+	// Services
+	otpService := otpservice.NewOTPService(otpRepo,otpGenerator,senderFactory)
+	customerService := customerservice.NewCustomerSignupService(customerRepo, hasher , otpService)
 
 	// Handlers
 	customer_handler.RegisterCustomerRoutes(api, customerService, otpService)

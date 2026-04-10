@@ -37,6 +37,24 @@ func (_m *OTPService) GenerateOTP(identifier string, otp_type string) (string, e
 	return r0, r1
 }
 
+// VerifyOTP provides a mock function with given fields: identifier, otp_type, otp
+func (_m *OTPService) VerifyOTP(identifier string, otp_type string, otp string) error {
+	ret := _m.Called(identifier, otp_type, otp)
+
+	if len(ret) == 0 {
+		panic("no return value specified for VerifyOTP")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string, string) error); ok {
+		r0 = rf(identifier, otp_type, otp)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // NewOTPService creates a new instance of OTPService. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewOTPService(t interface {

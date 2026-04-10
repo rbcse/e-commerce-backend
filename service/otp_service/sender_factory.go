@@ -1,6 +1,6 @@
 package otpservice
 
-import "fmt"
+import ae "e-commerce/error"
 
 type OTPType string
 
@@ -9,13 +9,15 @@ const (
 	Phone OTPType = "PHONE"
 )
 
-func GetSender(t OTPType) (OTPSender, error) {
+type DefaultSenderFactory struct{}
+
+func (d *DefaultSenderFactory) GetSender(t OTPType) (OTPSender, error) {
 	switch t {
 	case Email:
 		return &EmailSender{}, nil
 	case Phone:
 		return &PhoneNumberSender{}, nil
 	default:
-		return nil, fmt.Errorf("invalid otp type")
+		return nil, ae.ErrInvalidOTPType
 	}
 }
