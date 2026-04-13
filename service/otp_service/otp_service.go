@@ -65,8 +65,8 @@ func (os *otpService) GenerateOTP(identifier, otp_type string) (string, error) {
 
 func (os *otpService) VerifyOTP(identifier , otp_type , otp string) (error) {
 
-	otpData , err := os.repo.GetOTP(identifier)
-	if err != nil {
+	otpData := os.repo.GetOTP(identifier)
+	if otpData == nil {
 		return ae.ErrOTPExpired
 	}
 
