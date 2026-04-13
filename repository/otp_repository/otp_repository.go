@@ -17,7 +17,7 @@ type OTPData struct {
 
 type OTPRepository interface {
 	SaveOTP(identifier, otp string) error
-	GetOTP(identifier string) (*OTPData , error)
+	GetOTP(identifier string) (*OTPData)
 }
 
 type otpRepository struct {
@@ -51,18 +51,18 @@ func (or *otpRepository) SaveOTP(identifier, otp string) error {
 
 }
 
-func (or *otpRepository) GetOTP(identifier string) (*OTPData , error) {
+func (or *otpRepository) GetOTP(identifier string) (*OTPData) {
 
 	ctx := context.Background()
 	key := "otp:" + identifier
 	result , err := or.client.HGetAll(ctx,key).Result()
 
 	if err != nil {
-		return nil , err
+		return nil
 	}
 
 	if len(result) == 0 {
-		return nil , redis.Nil
+		return nil
 	}
 
 	attempts , _ := strconv.Atoi(result["attempts"])
@@ -70,6 +70,6 @@ func (or *otpRepository) GetOTP(identifier string) (*OTPData , error) {
 		Identifier: result["identifier"],
 		OTP: result["otp"],
 		Attempts: attempts,
-	} , nil
+	}
 
 }

@@ -14,7 +14,7 @@ type OTPRepository struct {
 }
 
 // GetOTP provides a mock function with given fields: identifier
-func (_m *OTPRepository) GetOTP(identifier string) (*otprepository.OTPData, error) {
+func (_m *OTPRepository) GetOTP(identifier string) *otprepository.OTPData {
 	ret := _m.Called(identifier)
 
 	if len(ret) == 0 {
@@ -22,10 +22,6 @@ func (_m *OTPRepository) GetOTP(identifier string) (*otprepository.OTPData, erro
 	}
 
 	var r0 *otprepository.OTPData
-	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (*otprepository.OTPData, error)); ok {
-		return rf(identifier)
-	}
 	if rf, ok := ret.Get(0).(func(string) *otprepository.OTPData); ok {
 		r0 = rf(identifier)
 	} else {
@@ -34,13 +30,7 @@ func (_m *OTPRepository) GetOTP(identifier string) (*otprepository.OTPData, erro
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(identifier)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
+	return r0
 }
 
 // SaveOTP provides a mock function with given fields: identifier, otp
